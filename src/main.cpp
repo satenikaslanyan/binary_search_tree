@@ -9,6 +9,9 @@ int main()
     t.insert(73);
     t.insert(120);
     t.insert(20);
+    t.insert(10);
+    t.insert(9);
+    t.insert(13);
     std::cout << "In-order traverse is   : ";
     t.in_order();
     std::cout << std::endl;
@@ -18,9 +21,15 @@ int main()
     std::cout << "Post-order traverse is : ";
     t.post_order();
     std::cout << std::endl;
-    if (t.find(11)) {
+    t.remove(15);
+    std::cout << "In-order traverse is   : ";
+    t.in_order();
+    std::cout << std::endl;
+    if (t.search(11)) {
         std::cout << "Found" << std::endl;
     } else {
         std::cout << "Not found" << std::endl;
     }
+    std::cout << "Depth of the tree is: " << t.max_depth() << std::endl;
+    t.level_order();
 }
