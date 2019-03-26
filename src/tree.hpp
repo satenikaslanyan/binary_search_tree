@@ -8,14 +8,17 @@ template <typename T>
 struct Node
 {
     T data;
-    Node *left;
-    Node *right;
+    Node<T>* left;
+    Node<T>* right;
+
+    T minValue();
+    Node<T>* remove(T data, Node<T>* parent);
 };
 
 template <typename T>
 class tree
 {
-    public:
+    private:
         Node<T>* root;
         bool search_helper(Node<T>* root, T data);  
         bool find_helper(Node<T>* root, T data);
@@ -23,7 +26,7 @@ class tree
         void in_order_helper(Node<T>* root);
         void pre_order_helper(Node<T>* root);
         void post_order_helper(Node<T>* root);
-        Node<T>* remove_helper(Node<T>* root, T data);
+        //Node<T>* remove_helper(Node<T>* root, T data);
         Node<T>* find_max_right(Node<T>* root);
         int max_depth_helper(Node<T>* root);
         void print_given_level(Node<T>* root, int level);
@@ -37,9 +40,10 @@ class tree
         void in_order();
         void pre_order();
         void post_order();
-        Node<T>* remove(T data);
+        //Node<T>* remove(T data);
         int max_depth();
         void level_order();
+        Node<T>* remove(T data);
 };
 
 #endif 
@@ -206,7 +210,7 @@ Node<T>* tree<T>::find_max_right(Node<T>* root)
     }
     return root;
 }
-
+/*
 template <typename T>
 Node<T>* tree<T>::remove_helper(Node<T>* root, T data)
 {
@@ -243,7 +247,7 @@ Node<T>* tree<T>::remove(T data)
 {
     return remove_helper(root, data);
 }
-
+*/
 template <typename T>
 int tree<T>::max_depth_helper(Node<T>* root)
 {
@@ -260,6 +264,7 @@ int tree<T>::max_depth()
 {
     return max_depth_helper(root);
 }
+
 /*
 template <typename T>
 void tree<T>::level_order()
@@ -281,8 +286,8 @@ void tree<T>::level_order()
         std::cout << curr->data << "  ";
     }
     std::cout << std::endl;
-}
-*/
+    }
+    */
 
 template <typename T>
 void tree<T>::level_order()
@@ -305,4 +310,61 @@ void tree<T>::print_given_level(Node<T>* root, int level)
         print_given_level(root->left, level - 1);
         print_given_level(root->right, level - 1);
     }
+}
+
+
+template <typename T>
+Node<T>* tree<T>::remove(T data) 
+{
+    if (root == NULL) {
+        return root;
+    } else {
+        if (root->data == data) {
+            Node<T>* parent = new Node<T>;
+            parent->data = 0;
+            parent->left = root;
+            parent->right = NULL;
+            Node<T>* removedNode = root->remove(data, parent);
+            root = parent->left;
+            delete removedNode;
+        } else {
+            Node<T>* removedNode = root->remove(data, NULL);
+                delete removedNode;
+        }
+    }
+    return root;
+}
+
+template <typename T>
+Node<T>* Node<T>::remove(T data, Node<T>* parent) {
+    if (data < this->data) {
+        if (left != NULL)
+            return left->remove(data, this);
+        else
+            return NULL;
+    } else if (data > this->data) {
+        if (right != NULL)
+            return right->remove(data, this);
+        else
+            return NULL;
+    } else {
+        if (left != NULL && right != NULL) {
+            this->data = right->minValue();
+            return right->remove(this->data, this);
+        } else if (parent->left == this) {
+            parent->left = (left != NULL) ? left : right;
+            return this;
+        } else {
+            parent->right = (left != NULL) ? left : right;
+            return this;
+        }
+    }
+}
+
+template <typename T>
+T Node<T>::minValue() {
+    if (left == NULL) {
+        return data;
+    } 
+    return left->data;
 }
