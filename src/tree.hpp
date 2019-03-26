@@ -18,31 +18,72 @@ class tree
 {
     private:
         Node<T>* root;
+        // helper function to find element with data (without recursion)
         bool search_helper(Node<T>* root, T data);  
+
+        // helper function to find element with data (recursion)
         bool find_helper(Node<T>* root, T data);
+
+        // helper function to insert node with given data in the tree
         void insert_helper(Node<T>* root, T data);
+        
+        // helper function to print tree in-order
         void in_order_helper(Node<T>* root);
+        
+        // helper function to print tree pre-order
         void pre_order_helper(Node<T>* root);
+        
+        // helper function to print tree post-order
         void post_order_helper(Node<T>* root);
-        //Node<T>* remove_helper(Node<T>* root, T data);
-        Node<T>* find_max_right(Node<T>* root);
+        
+        // helper function to calculate the depth of the tree
         int max_depth_helper(Node<T>* root);
+        
+        // prints the given level(this function is for level order traverse)
         void print_given_level(Node<T>* root, int level);
-        T minValue(Node<T>* root);
-        Node<T>* remove(T data, Node<T>* root, Node<T>* parent);
+        
+        // returns the minimum value(this function is used to remove node
+        // which has two children)
+        T min_value(Node<T>* root);
+        
+        //helper function to delete the node with given value
+        Node<T>* remove_helper(T data, Node<T>* root, Node<T>* parent);
+    
     public:
         tree();   
         ~tree();
-        void delete_tree(Node<T>* node);
+    
+        //this function is used in destructor(for deleting all nodes)
+        //recursive function
+        void delete_tree(Node<T>* root);
+
+        //this function is for inserting the node with given data
         void insert(T data);     
+
+        //this function is for checking if the node 
+        //with given data exists or not
         bool search(T data);
+
+        //this function is for checking if the node 
+        //with given data exists or not (recursive)
         bool find(T data);
+
+        //prints tree in in-order
         void in_order();
+
+        //prints tree in pre-order
         void pre_order();
+
+        //prints tree in post-order
         void post_order();
-        //Node<T>* remove(T data);
+
+        //calculates the depth of the tree
         int max_depth();
+
+        //prints tree in level-order
         void level_order();
+
+        //removes the node with given value
         Node<T>* remove(T data);
 };
 
@@ -52,13 +93,13 @@ template <typename T>
 tree<T>::tree() : root(NULL) {}
 
 template <typename T>
-void tree<T>::delete_tree(Node<T>* node)
+void tree<T>::delete_tree(Node<T>* root)
 {
-    if (NULL != node)
+    if (NULL != root)
     {
-        delete_tree(node->left);
-        delete_tree(node->right);
-        delete node;
+        delete_tree(root->left);
+        delete_tree(root->right);
+        delete root;
     }
 }
 
@@ -200,55 +241,6 @@ void tree<T>::post_order_helper(Node<T>* root)
 }
 
 template <typename T>
-Node<T>* tree<T>::find_max_right(Node<T>* root)
-{
-    if (NULL == root) {
-        return NULL;
-    }
-    while(NULL != root->right) {
-        root = root->right;
-    }
-    return root;
-}
-/*
-template <typename T>
-Node<T>* tree<T>::remove_helper(Node<T>* root, T data)
-{
-    if (NULL == root) {
-        return root;
-    }
-    if (data < root->data) {
-        root->left = remove_helper(root->left, data);
-    } else if (data > root->data)
-        root->right = remove_helper(root->right, data);
-    else {
-        if(root->right == NULL && root->left == NULL) {
-            delete root;
-            root = NULL;
-        } else if(root->right == NULL) {
-            Node<T>* temp = root;
-            root= root->left;
-            delete temp;
-        } else if(root->left == NULL) {
-            Node<T>* temp = root;
-            root= root->right;
-            delete temp;
-        } else {
-            Node<T>* temp = find_max_right(root->left);
-            root->data = temp->data;
-            root->left = remove_helper(root->left, temp->data);
-        }
-    }
-    return root;
-}
-
-template <typename T>
-Node<T>* tree<T>::remove(T data)
-{
-    return remove_helper(root, data);
-}
-*/
-template <typename T>
 int tree<T>::max_depth_helper(Node<T>* root)
 {
     if (NULL == root) {
@@ -286,8 +278,8 @@ void tree<T>::level_order()
         std::cout << curr->data << "  ";
     }
     std::cout << std::endl;
-    }
-    */
+}
+*/
 
 template <typename T>
 void tree<T>::level_order()
@@ -324,33 +316,33 @@ Node<T>* tree<T>::remove(T data)
             parent->data = 0;
             parent->left = root;
             parent->right = NULL;
-            Node<T>* removedNode = remove(data, root, parent);
+            Node<T>* removedNode = remove_helper(data, root, parent);
             root = parent->left;
             delete removedNode;
         } else {
-            Node<T>* removedNode = remove(data, root, NULL);
-                delete removedNode;
+            Node<T>* removedNode = remove_helper(data, root, NULL);
+            delete removedNode;
         }
     }
     return root;
 }
 
 template <typename T>
-Node<T>* tree<T>::remove(T data, Node<T>* root, Node<T>* parent) {
+Node<T>* tree<T>::remove_helper(T data, Node<T>* root, Node<T>* parent) {
     if (data < root->data) {
         if (root->left != NULL)
-            return remove(data, root->left, root);
+            return remove_helper(data, root->left, root);
         else
             return NULL;
     } else if (data > root->data) {
         if (root->right != NULL)
-            return remove(data, root->right, root);
+            return remove_helper(data, root->right, root);
         else
             return NULL;
     } else {
         if (root->left != NULL && root->right != NULL) {
-            root->data = minValue(root->right);
-            return remove(root->data, root->right, root);
+            root->data = min_value(root->right);
+            return remove_helper(root->data, root->right, root);
         } else if (parent->left == root) {
             parent->left = (root->left != NULL) ? root->left : root->right;
             return root;
@@ -362,7 +354,7 @@ Node<T>* tree<T>::remove(T data, Node<T>* root, Node<T>* parent) {
 }
 
 template <typename T>
-T tree<T>::minValue(Node<T>* root) {
+T tree<T>::min_value(Node<T>* root) {
     if (root->left == NULL) {
         return root->data;
     } 
