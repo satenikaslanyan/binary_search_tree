@@ -83,6 +83,9 @@ class tree
         //prints tree in level-order
         void level_order();
 
+        //prints tree in level-order(function is written with queue)
+        void level_order_queue();
+
         //removes the node with given value
         Node<T>* remove(T data);
 };
@@ -257,9 +260,9 @@ int tree<T>::max_depth()
     return max_depth_helper(root);
 }
 
-/*
+
 template <typename T>
-void tree<T>::level_order()
+void tree<T>::level_order_queue()
 {
     std::cout << "Level order traversal is: ";
     if (root == NULL) {
@@ -279,11 +282,12 @@ void tree<T>::level_order()
     }
     std::cout << std::endl;
 }
-*/
+
 
 template <typename T>
 void tree<T>::level_order()
 {
+    std::cout << "Level order traversal is : ";
     for (int i = 1; i <= max_depth(); ++i) {
         print_given_level(root, i);
     }

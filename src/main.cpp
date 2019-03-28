@@ -13,18 +13,19 @@ int main()
     t.insert(120);
     t.insert(23);
     t.insert(16);
-    std::cout << "In-order traverse is   : ";
+    std::cout << "In-order traverse is     : ";
     t.in_order();
     std::cout << std::endl;
-    std::cout << "Pre-order traverse is  : ";
+    std::cout << "Pre-order traverse is    : ";
     t.pre_order();
     std::cout << std::endl;
-    std::cout << "Post-order traverse is : ";
+    std::cout << "Post-order traverse is   : ";
     t.post_order();
     std::cout << std::endl;
-    t.remove(15);
     t.level_order();
-    std::cout << "Pre-order traverse is   : ";
+    t.remove(15);
+    std::cout << "15 deleted" << std::endl;
+    std::cout << "Pre-order traverse is    : ";
     t.pre_order();
     std::cout << std::endl;
     if (t.search(11)) {
@@ -33,5 +34,4 @@ int main()
         std::cout << "Not found" << std::endl;
     }
     std::cout << "Depth of the tree is: " << t.max_depth() << std::endl;
-    t.level_order();
 }
