@@ -358,5 +358,5 @@ T tree<T>::min_value(Node<T>* root) {
     if (root->left == NULL) {
         return root->data;
     } 
-    return (root->left)->data;
+    return min_value(root->left);
 }

@@ -12,6 +12,7 @@ int main()
     t.insert(17);
     t.insert(120);
     t.insert(23);
+    t.insert(16);
     std::cout << "In-order traverse is   : ";
     t.in_order();
     std::cout << std::endl;
@@ -21,9 +22,10 @@ int main()
     std::cout << "Post-order traverse is : ";
     t.post_order();
     std::cout << std::endl;
-    t.remove(20);
-    std::cout << "In-order traverse is   : ";
-    t.in_order();
+    t.remove(15);
+    t.level_order();
+    std::cout << "Pre-order traverse is   : ";
+    t.pre_order();
     std::cout << std::endl;
     if (t.search(11)) {
         std::cout << "Found" << std::endl;
